@@ -1,0 +1,175 @@
+.form-content {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+.form-content form {
+	width: 100%;
+    max-width: 600px;
+    display: block;
+    box-sizing: border-box;
+    margin: 0 auto 38.4px;
+    margin: 0 auto 2.4rem;
+    padding: 48px 44px;
+    padding: 3rem 2.75rem;
+    border-radius: 6px;
+    box-shadow: 0 0 20px rgba(0,0,0,.06);
+    -webkit-transition: all 360ms ease-in-out 360ms;
+    transition: all 360ms ease-in-out 360ms;
+}
+.form-content form span {
+  display: block;
+  padding: 3.2px 0;
+  padding: 0.2rem 0;
+  color: rgba(255, 0, 0, 0.712);
+  font-size: 12px;
+}
+.form-content select {
+    width: 100%;
+    margin-bottom: 12px;
+    margin-bottom: .75rem;
+    height: 46px;
+    padding-left: 19.2px;
+    padding-left: 1.2rem;
+    border-radius: 5px;
+}
+.form-content .form-two-container .row {
+    width:100%;
+    margin: 0 0 12.8px;
+    margin: 0 0 0.8rem;
+    border-bottom: 1px dotted rgba(0,0,0,0.2);
+}
+#charity-notice-content{
+  background-color: orange;
+  padding: 32px;
+  padding: 2rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 48px;
+  margin-bottom:3rem;
+}
+#charity-notice-content p {
+  line-height: 1;
+}
+#charity-notice-content p:nth-child(-1) {
+  margin-bottom: 0;
+}
+#msg-div {
+  width:100%;
+  margin: 48px auto;
+  margin:3rem auto;
+  width:100%;
+  max-width:600px;
+  padding: 48px 24px;
+  padding: 3rem 1.5rem;
+  box-sizing:border-box;
+  border-radius:5px;
+  box-shadow: inset 0 0 13px rgba(0,0,0,0.1);
+  text-align: center;
+}
+#msg-div h4,
+#msg-div h5 {
+  color: rgb(243, 41, 41);
+}
+#msg-div .charity-msg-div {
+  width:75%;
+  margin: 0 auto 8px;
+  margin:0 auto 0.5rem;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-orient:horizontal;
+  -webkit-box-direction:normal;
+      -ms-flex-direction:row;
+          flex-direction:row;
+  -ms-flex-pack:distribute;
+      justify-content:space-around;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  padding-top: 8px;
+  padding-top: 0.5rem;
+}
+#msg-div-link_one,
+#msg-div-link_two {
+  display:inline-block;
+  padding: 9.6px 24px;
+  padding:0.6rem 1.5rem;
+  color:#fff;
+  text-transform:uppercase;
+  background-color:rgb(94, 182, 241);
+  border-radius:4px;
+  text-decoration: none;
+  -webkit-transition: all 300ms ease-in;
+  transition: all 300ms ease-in;
+  font-size: 18.4px;
+  font-size: 1.15rem;
+  border-bottom:none;
+  box-shadow: none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+}
+#msg-div-link_two {
+  color: #444444;
+  background-color:#e5e5e5;
+}
+#msg-div-link_one:hover,
+#msg-div-link_two:hover {
+  -webkit-transform: translateY(-3px);
+          transform: translateY(-3px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  text-decoration: none;
+}
+#success-msg-div {
+  width: 100%;
+  margin: 3rem auto;
+  max-width: 900px;
+  padding: 1.5rem 1.5rem 1.5rem 2.4rem;
+  border-left: 14px solid blue;
+  border-radius: 20px;
+  box-shadow: 0 4px 13px rgba(0,0,0,0.10);
+}
+#success-msg-div h4 {
+  margin:0;
+  color:#54B948;
+}
+/* LOADING ICON */
+.lds-charity {
+    display: none;
+    position: relative;
+    width: 64px;
+    height: 64px;
+  }
+  .lds-charity.show{
+      display: block;
+  }
+  .lds-charity div {
+    display: inline-block;
+    position: absolute;
+    left: 6px;
+    width: 13px;
+    background: rgb(94, 182, 241);
+    animation: lds-charity 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .lds-charity div:nth-child(1) {
+    left: 6px;
+    animation-delay: -0.24s;
+  }
+  .lds-charity div:nth-child(2) {
+    left: 26px;
+    animation-delay: -0.12s;
+  }
+  .lds-charity div:nth-child(3) {
+    left: 45px;
+    animation-delay: 0;
+  }
+  @keyframes lds-charity {
+    0% {
+      top: 6px;
+      height: 51px;
+    }
+    50%, 100% {
+      top: 19px;
+      height: 26px;
+    }
+  }

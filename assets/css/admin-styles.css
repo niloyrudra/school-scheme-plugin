@@ -1,0 +1,8 @@
+#school_scheme_name_gen_form .ui-select {
+    width: 320px;
+    height: 40px;
+    border-radius: 10px;
+    padding: 8px 16px;
+    border: none;
+    box-shadow: 0px 3px 10px rgba( 0,0,0,0.1 );
+}

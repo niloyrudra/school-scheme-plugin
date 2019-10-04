@@ -4,6 +4,10 @@
 $option_names = get_option( 'school_data' );
 if( $option_names ){
     
+    $country_id         = $option_names['country_id'];
+    $county_id          = $option_names['county_id'];
+    $city_id            = $option_names['city_id'];
+    $edu_type_id        = $option_names['edu_type_id'];
     $school_names       = $option_names['school_names'];
     $addresses          = $option_names['address'];
     $street_name        = $option_names['street_name'];
@@ -32,7 +36,13 @@ if( $option_names ){
                     'post_content'  => $content,
                     'post_status'   => 'publish',
                     'post_author'   => 1,
-                    'post_type'     => 'edu_institutions'
+                    'post_type'     => 'edu_institutions',
+                    'tax_input'     => [
+                        'country'           => [ $country_id ],
+                        'county'            => [ $county_id ],
+                        'city'              => [ $city_id ],
+                        'edu_type'          => [ $edu_type_id ],
+                    ]
                 ]);
 
             }
@@ -79,7 +89,7 @@ if( $option_names ){
 
     <hr>
 
-    <form action="options.php" method="post">
+    <form action="options.php" method="post" id="school_scheme_name_gen_form">
 
     <?php
 

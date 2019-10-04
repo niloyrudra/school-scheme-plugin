@@ -29,6 +29,7 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
         {
 
             // Enqueue Scripts
+            add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
             // Adding Admin Page
@@ -102,15 +103,17 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
         }
 
         
-        public function wpse_mime_types( $existing_mimes ) {
+        public function wpse_mime_types( $existing_mimes )
+        {
             // Add csv to the list of allowed mime types
             $existing_mimes['csv'] = 'text/csv';
 
             return $existing_mimes;
         }
 
-        //* If the current user can upload_csv and the file extension is csv, override arguments - edit - "$pathinfo" changed to "pathinfo"
-        public function ot_school_scheme_check_filetype_and_ext( $args, $file, $filename, $mimes ) {
+        // If the current user can upload_csv and the file extension is csv, override arguments - edit - "$pathinfo" changed to "pathinfo"
+        public function ot_school_scheme_check_filetype_and_ext( $args, $file, $filename, $mimes )
+        {
             if( current_user_can( 'upload_csv' ) && 'csv' === pathinfo( $filename )[ 'extension' ] ){
                 $args = [
                     'ext'             => 'csv',
@@ -170,6 +173,58 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
              *  ==================================
              */
 
+            // Country Checkbox Field
+            add_settings_field(
+                'countries_textarea_settings_field',
+                __( 'Which Country?' ),
+                [ $this, 'countries_textarea_settings_field_callback' ],
+                'ot_school_scheme',
+                'school_data_settings_section',
+                [
+                    'option_name'   => 'school_data',
+                    'label_for'     => 'countries',
+                    'classname'     => 'ui-toggle'
+                ]
+            );
+            // County Checkbox Field
+            add_settings_field(
+                'counties_textarea_settings_field',
+                __( 'Which County?' ),
+                [ $this, 'counties_textarea_settings_field_callback' ],
+                'ot_school_scheme',
+                'school_data_settings_section',
+                [
+                    'option_name'   => 'school_data',
+                    'label_for'     => 'counties',
+                    'classname'     => 'ui-select'
+                ]
+            );
+            // City Checkbox Field
+            add_settings_field(
+                'cities_textarea_settings_field',
+                __( 'Which City?' ),
+                [ $this, 'cities_textarea_settings_field_callback' ],
+                'ot_school_scheme',
+                'school_data_settings_section',
+                [
+                    'option_name'   => 'school_data',
+                    'label_for'     => 'cities',
+                    'classname'     => 'ui-select'
+                ]
+            );
+            // Institution Type Checkbox Field
+            add_settings_field(
+                'edu_type_textarea_settings_field',
+                __( 'Institution Type' ),
+                [ $this, 'edu_type_textarea_settings_field_callback' ],
+                'ot_school_scheme',
+                'school_data_settings_section',
+                [
+                    'option_name'   => 'school_data',
+                    'label_for'     => 'edu_type',
+                    'classname'     => 'ui-toggle'
+                ]
+            );
             // School Names Textarea Field
             add_settings_field(
                 'school_names_textarea_settings_field',
@@ -325,6 +380,10 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
 
             $output = [];
 
+            $selected_country       = $input['countries']['id'];
+            $selected_county        = $input['counties'];
+            $selected_city          = $input['cities'];
+            $selected_edu_type      = $input['edu_type']['id'];
             $school_names_old       = $input['school_names'];
             $address_old            = $input['address'];
             $street_name_old        = $input['street_name'];
@@ -338,6 +397,10 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
             $students_old           = $input['students'];
 
 
+            if( $selected_country ) $country_id                 = $selected_country;
+            if( $selected_county ) $county_id                   = $selected_county;
+            if( $selected_city ) $city_id                       = $selected_city;
+            if( $selected_edu_type ) $edu_type_id               = $selected_edu_type;
             if( $school_names_old ) {
                 $school_names               = explode( PHP_EOL, $school_names_old );
             } else {
@@ -355,6 +418,10 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
             if( $students_old ) $students                       = explode( PHP_EOL, $students_old );
 
             // array_push( $output, $school_names );
+            $output[ 'country_id' ]         = $country_id;
+            $output[ 'county_id' ]          = $county_id;
+            $output[ 'city_id' ]            = $city_id;
+            $output[ 'edu_type_id' ]        = $edu_type_id;
             $output[ 'school_names' ]       = $school_names;
             $output[ 'address' ]            = $address;
             $output[ 'street_name' ]        = $street_name;
@@ -374,6 +441,140 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
         public function school_data_settings_section_callback()
         {
             echo "<p>Insert your school data here.</p>";
+        }
+
+        // Country Checkbox Field
+        public function countries_textarea_settings_field_callback( $args )
+        {
+            $option_name = $args[ 'option_name' ];
+            $name = $args[ 'label_for' ];
+            $className = $args[ 'classname' ];
+
+            $countries = get_terms(
+                [
+                    'taxonomy'      => 'country',
+                    'parent'        => 0,
+                    'hide_empty'    => false,
+                    'orderby'       => 'name'
+                ]
+            );
+            
+            echo '<label for="' . $name . '">';
+
+            if( $countries ) {
+
+                foreach ( $countries as $country_key => $country_value ) {
+                    
+                    echo '<input type="radio" name="' . $option_name . '[' . $name . '][id]" id="' . $name . '" value="' . $country_value->term_id . '"  class="' . $className . '"> <b>' . $country_value->name . '</b> ';
+                
+                }
+
+            }
+
+            echo '</label>';
+
+        }
+        // Country Checkbox Field
+        public function counties_textarea_settings_field_callback( $args )
+        {
+            $option_name = $args[ 'option_name' ];
+            $name = $args[ 'label_for' ];
+            $className = $args[ 'classname' ];
+
+            $countries = get_terms(
+                [
+                    'taxonomy'      => 'county',
+                    'parent'        => 0,
+                    'hide_empty'    => false,
+                    'orderby'       => 'name'
+                ]
+            );
+            
+            echo '<label for="' . $name . '">';
+
+            if( $countries ) {
+
+                echo '<select name="' . $option_name . '[' . $name . ']" class="' . $className . '">';
+                echo '<option value="">Select a County...</option>';
+
+                foreach ( $countries as $country_key => $country_value ) {
+                    
+                    echo '<option value="' . $country_value->term_id . '">' . $country_value->name . '</option>';
+
+                }
+
+                echo '</select>';
+            }
+
+            echo '</label>';
+
+        }
+        // Country Checkbox Field
+        public function cities_textarea_settings_field_callback( $args )
+        {
+            $option_name = $args[ 'option_name' ];
+            $name = $args[ 'label_for' ];
+            $className = $args[ 'classname' ];
+
+            $countries = get_terms(
+                [
+                    'taxonomy'      => 'city',
+                    'parent'        => 0,
+                    'hide_empty'    => false,
+                    'orderby'       => 'name'
+                ]
+            );
+            
+            echo '<label for="' . $name . '">';
+            
+            if( $countries ) {
+                
+                echo '<select name="' . $option_name . '[' . $name . ']" class="' . $className . '">';
+                echo '<option value="">Select a City...</option>';
+
+                foreach ( $countries as $country_key => $country_value ) {
+                    
+                    echo '<option value="' . $country_value->term_id . '">' . $country_value->name . '</option>';
+                
+                }
+
+                echo '</select>';
+
+            }
+
+            echo '</label>';
+
+        }
+        // Country Checkbox Field
+        public function edu_type_textarea_settings_field_callback( $args )
+        {
+            $option_name = $args[ 'option_name' ];
+            $name = $args[ 'label_for' ];
+            $className = $args[ 'classname' ];
+
+            $countries = get_terms(
+                [
+                    'taxonomy'      => 'edu_type',
+                    'parent'        => 0,
+                    'hide_empty'    => false,
+                    'orderby'       => 'name'
+                ]
+            );
+            
+            echo '<label for="' . $name . '">';
+
+            if( $countries ) {
+
+                foreach ( $countries as $country_key => $country_value ) {
+                    
+                    echo '<input type="radio" name="' . $option_name . '[' . $name . '][id]" id="' . $name . '" value="' . $country_value->term_id . '"  class="' . $className . '"> <b>' . $country_value->name . '</b> ';
+                
+                }
+
+            }
+
+            echo '</label>';
+
         }
 
         // School Names Field
@@ -468,7 +669,8 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
          */
 
         // ShortCode [charity]
-        public function generate_shortcode_for_charity_scheme_option( $args = [], $content = null ) {
+        public function generate_shortcode_for_charity_scheme_option( $args = [], $content = null )
+        {
             $selected = '';
             $args = [
                 'public'   => true,
@@ -513,7 +715,8 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
         }
 
         // ShortCode [charity-user-section]
-        public function charity_user_section( $atts = [], $content = null ) {
+        public function charity_user_section( $atts = [], $content = null )
+        {
             if( is_user_logged_in() ) {
                 $is_user_has_charity = get_user_meta( get_current_user_id(), '_donate_charity_key', true );
                 if( $is_user_has_charity ) {
@@ -693,7 +896,7 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
             $donnerDisplayName = ucfirst( get_userdata( (int)$donnerID )->display_name );
             $donnerEmail = get_userdata( (int)$donnerID )->user_email;
             $donnerRole = ucfirst( implode( ', ', get_userdata( (int)$donnerID )->roles ) );
-            
+
             $content = __( 'This Charity Scheme is on <b>' ) . $charityType . __( '</b>.<br />It\'s a ' ) . $instituteType . __( ', located at ' ) . $city . ', ' . $county . ', ' . $country . __( '.<br /><b><u>Donner:</u></b><br /><i>UserName</i> : <b>' ) . $donnerUserName . __( '</b>.<br /><i>Display Name</i> : <b>' ) . $donnerDisplayName . __( '</b>.<br /><i>E-mail</i> : <b>< ') . $donnerEmail . __( ' ></b>.<br /><i>User Role</i> : <b>') . $donnerRole . '</b>.';
 
             $msgContent = 'This Charity Scheme is on ' . $charityType . '. It\'s a ' . $instituteType . ', located at ' . $city . ', ' . $county . ', ' . $country . '.\nDonner: \nUserName : ' . $donnerUserName . '.\nDisplay Name : ' . $donnerDisplayName . '.\nE-mail : < ' . $donnerEmail . ' >.\nUser Role : ' . $donnerRole . '.';
@@ -703,8 +906,6 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
             $exit_charity_title = esc_html( get_user_meta( (int)$donnerID, '_donate_charity_key', true ) );
             if( $exit_charity_title ) {
                 $exit_charity = get_page_by_title( $exit_charity_title, OBJECT, 'charity_donations' );
-                // global $wpdb;
-                // $exit_charity = $wpdb->get_row( $wpdb->prepare("select * from wp_posts where post_title='%s'", $exit_charity_title ));
 
                 // Delete Any Existing Charity Donation Post Before Inserting The New Charity Donation Post...
                 wp_delete_post( $exit_charity->ID, false ); // Not to delete Completely, just Move it to the trash
@@ -750,7 +951,16 @@ if( ! class_exists( 'Orbit_School_Scheme' ) ):
         {
             wp_enqueue_style( 'charity-styles', plugin_dir_url( __FILE__ ) . './assets/css/cs-style.css' );
             wp_enqueue_script( 'charity-js', plugin_dir_url( __FILE__ ) . './assets/js/charity-scheme.js', array('jquery'), false, true );
-            wp_enqueue_script( 'mu-main-scripts', plugin_dir_url( __FILE__ ) . './assets/js/mu-main.scripts.js', NULL, '1.0.0', true );
+            // wp_enqueue_script( 'mu-main-scripts', plugin_dir_url( __FILE__ ) . './assets/js/mu-main.scripts.js', NULL, '1.0.0', true );
+        }
+
+        // Enqueue Scripts CallBack Func ADMIN
+        public function admin_enqueue_scripts( $hook_suffix )
+        {
+            
+            if( $hook_suffix == 'toplevel_page_ot_school_scheme' ) {
+                wp_enqueue_style( 'charity-admin-styles', plugin_dir_url( __FILE__ ) . '/assets/css/admin-styles.css' );
+            }
         }
                 
         /**
